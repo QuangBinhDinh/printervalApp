@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "251773562085",
+    "project_id": "printerval-5ac19",
+    "storage_bucket": "printerval-5ac19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251773562085:android:890610a163fbb6d1cff80c",
+        "android_client_info": {
+          "package_name": "com.printervalapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "251773562085-c66ukci3booi645fbid0ga9rlijds3pg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.printervalapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "251773562085-2ju0l2pk19bss42np4aa2thtf96uoo8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOUwDOC3qRAJpSd7YCYscbChWVArpCdDY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "251773562085-2ju0l2pk19bss42np4aa2thtf96uoo8n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
