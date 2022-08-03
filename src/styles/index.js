@@ -1,6 +1,14 @@
+import { darkColors, lightColors } from "./colors"
+import { fontConfig, fonts } from "./font"
+
 export const lightTheme = {
-    UNFOCUSED_TAB_BAR: "#dcdcdc",
-    FOCUSED_TAB_BAR: "#d1551f",
-    PRIMARY_COLOR: "",
-    SECONDARY_COLOR: ""
+    colors: lightColors,
+    fontConfig,
+    fonts
+}
+
+export const darkTheme = {
+    colors: darkColors,
+    fontConfig,
+    fonts
 }

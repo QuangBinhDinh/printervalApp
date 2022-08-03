@@ -31,7 +31,6 @@ const Router = () => {
         })
     }, [])
     return (
-
         <SafeAreaView style={{ flex: 1 }}>
             <NavigationContainer ref={navigationRef}>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
