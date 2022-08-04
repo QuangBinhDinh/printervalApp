@@ -7,10 +7,11 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 
-import { useCustomTheme } from "../../components/hooks/useCustomTheme";
+import { getCustomTheme } from "../../components";
+import { SCREEN_WIDTH } from "../../util";
 
 export const MainCategory = memo(({ title, requireImage, screen }) => {
-    const { colors, fontConfig, fonts } = useCustomTheme();
+    const { colors, fontConfig, fonts } = getCustomTheme();
     return (
         <TouchableOpacity style={{ width: '50%', aspectRatio: 1, padding: 2 }}>
             <ImageBackground style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} source={requireImage}>
@@ -22,7 +23,7 @@ export const MainCategory = memo(({ title, requireImage, screen }) => {
 
 
 export const PopularCategory = memo(({ title, imageUri, color }) => {
-    const { colors, fonts } = useCustomTheme();
+    const { colors, fonts } = getCustomTheme();
     return (
 
         <TouchableOpacity style={{//note: element co aspectRatio phai co child ben trong 
@@ -46,11 +47,12 @@ export const PopularCategory = memo(({ title, imageUri, color }) => {
 })
 
 export const ProductCard = memo(({ containerStyle, title, price, originPrice }) => {
-    const { colors, fonts } = useCustomTheme();
+    const { colors, fonts } = getCustomTheme();
 
     return (
-        <TouchableOpacity style={{//note: element co aspectRatio phai co child ben trong 
-            width: '50%', aspectRatio: 0.7, padding: 2, borderWidth: 1, borderColor: colors.LIGHT_BORDER,
+        //note: element co aspectRatio phai co child ben trong 
+        <TouchableOpacity style={{
+            width: '50%', aspectRatio: 0.7, padding: 2, borderWidth: 0.5, borderColor: colors.LIGHT_BORDER,
             ...containerStyle
         }}>
             <Box flex={1}>
@@ -73,10 +75,30 @@ export const ProductCard = memo(({ containerStyle, title, price, originPrice }) 
     )
 })
 
-// export const MoreButton = ({title = "more", onPress})=>{
-//     return (
-//        <Button po>
+export const RecentlyView = memo(({ containerStyle, title, price, originPrice }) => {
+    const { colors } = getCustomTheme();
 
-//        </Button>
-//     )
-// }
+    return (
+        <TouchableOpacity style={{
+            width: SCREEN_WIDTH / 3.5, aspectRatio: 0.7, marginLeft: 15,
+            ...containerStyle
+        }}>
+            <Box flex={1}>
+                <Box flex={7} p={'2px'}>
+                    <Image style={{ flex: 1 }} source={{ uri: 'https://liveview.printerval.com/image/630x630/t-shirts-men-heavyweight-t-shirt,black,sprv1-1038787489,2d2d2d.jpeg' }} />
+                    {/* <Center borderRadius={30} position={'absolute'} backgroundColor={colors.SALEOFF_COLOR}
+                        left={'7px'} top={'10px'} w={'25%'} style={{ aspectRatio: 1 }} >
+                        <Text fontSize={14} color={'white'} lineHeight={18} textAlign={'center'}>30% OFF</Text>
+                    </Center> */}
+                </Box>
+                <Box flex={3} justifyContent={'space-between'} px={'4px'} >
+                    <Text fontSize={12} fontWeight={'bold'} lineHeight={16} numberOfLines={1} mt={'5px'}>{title}</Text>
+                    <Row alignItems={'center'}>
+                        <Text fontSize={12} color={colors.PRICE_TAG_COLOR}>{price}</Text>
+                        <Text fontSize={11} color={colors.PRICE_ORIGIN_COLOR} textDecorationLine={'line-through'} ml={'5px'}>{originPrice}</Text>
+                    </Row>
+                </Box>
+            </Box>
+        </TouchableOpacity>
+    )
+})

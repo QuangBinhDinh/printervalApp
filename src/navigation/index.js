@@ -35,7 +35,7 @@ const Router = () => {
             <NavigationContainer ref={navigationRef}>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                     {
-                        !authInfo.logged ? <Stack.Screen name="Login" component={Login} />
+                        authInfo.logged ? <Stack.Screen name="Login" component={Login} />
                             : <Stack.Screen name="App" component={BottomTabs} />
                     }
                 </Stack.Navigator>

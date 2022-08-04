@@ -1,21 +1,31 @@
+//UI
 import React, { useEffect, useState, memo } from "react";
-import { Box, Text, Input, Icon, Image, Button } from "native-base";
+import { Box, Text, Input, Icon, Image, Button, Row } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity, ImageBackground, View } from "react-native";
-import { createSelector } from "@reduxjs/toolkit";
+import { TouchableOpacity, ImageBackground, View, StyleSheet } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 import Swiper from "../../components/Swiper";
-import { useDispatch, useSelector } from "react-redux";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../util";
+import { ScrollView as Scroll } from "react-native-gesture-handler";
 import { Shadow } from 'react-native-neomorph-shadows';
 import LinearGradient from "react-native-linear-gradient";
-import { MainCategory, PopularCategory, ProductCard } from "./component";
-import { useCustomTheme } from "../../components/hooks/useCustomTheme";
+
+//Component
+import { MainCategory, PopularCategory, ProductCard, RecentlyView } from "./component";
+import { getCustomTheme } from "../../components";
+
+//API + Redux
+import { useDispatch, useSelector } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
+
+//Utils
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../util";
+
 
 const HomeScreen = () => {
-    const { colors, fonts } = useCustomTheme();
+    const { colors, fonts } = getCustomTheme();
+
     return (
         <KeyboardAwareScrollView style={{ flex: 1, backgroundColor: 'white' }}
             contentContainerStyle={{ alignItems: 'center' }}
@@ -100,6 +110,34 @@ const HomeScreen = () => {
                     />)
                 }
             </Box>
+
+            <Box mt={'50px'}>
+                <Row alignItems={'center'} justifyContent={'space-between'}>
+                    <Text fontFamily={fonts.sectionTitle} fontSize={20} ml={'10px'}>Recently Viewed</Text>
+                    <Button backgroundColor={'transparent'}
+                        rightIcon={<Icon as={<AntDesign />} name={'right'} size={4} color={'black'} />}>
+                        <Text color={'black'} fontSize={16}>More</Text>
+                    </Button>
+                </Row>
+                <Box h={'200px'} >
+                    <Scroll
+                        style={{ borderTopColor: colors.LIGHT_BORDER, borderTopWidth: 1, borderBottomColor: colors.LIGHT_BORDER, borderBottomWidth: 1, }}
+                        contentContainerStyle={{ paddingVertical: 8, alignItems: 'center' }}
+                        horizontal >
+                        {
+                            ProductCardConfig.map(item => (<RecentlyView
+                                key={item.id}
+                                title={item.title}
+                                price={item.price}
+                                originPrice={item.originPrice}
+                            />))
+                        }
+                    </Scroll>
+                </Box>
+
+            </Box>
+            <Box h={'100px'}></Box>
+
             {/* <Input mt={'200px'} borderWidth={1} h={'50px'} w={'80%'} fontSize={14} /> */}
         </KeyboardAwareScrollView>
 
