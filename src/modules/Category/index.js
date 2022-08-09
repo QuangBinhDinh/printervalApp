@@ -7,11 +7,11 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 import Swiper from "../../components/Swiper";
-import ScrollableTabView, { DefaultTabBar } from "react-native-scrollable-tab-view";
+import ScrollableTabView, { DefaultTabBar, ScrollableTabBar } from "react-native-scrollable-tab-view";
 import { getCustomTheme } from "../../components";
-import FacebookTabBar from "./FacebookTabBar";
+
 import CategoryTabBar from "./CategoryTabBar";
-import TabBarService from "./TabBarService";
+
 
 const CategoryTitleConfig = [
     {
@@ -60,10 +60,11 @@ const CategoryTitleConfig = [
 ]
 const CategoryScreen = () => {
     const { colors, fonts } = getCustomTheme();
+    const [dragging, setDrag] = useState(false);
 
-    const onScrollTab = (num) => { // hàm scroll tabBar khi scroll screen ở dưới 
-        if (Number.isInteger(num)) TabBarService.scrollTo(num)
-    }
+    // const onScrollTab = (num) => { // hàm scroll tabBar khi scroll screen ở dưới 
+    //     if (Number.isInteger(num)) TabBarService.scrollTo(num)
+    // }
     return (
         <Box flex={1} bg={'white'}>
             <Box
@@ -93,13 +94,14 @@ const CategoryScreen = () => {
             </Box>
             <ScrollableTabView
                 style={{ flex: 1 }}
-                renderTabBar={() => <FacebookTabBar config={CategoryTitleConfig} childRef={ref => TabBarService.setService(ref)} />}
-                onScrollBeginDrag={() => console.log("drag")}
-                onScrollEndDrag={() => console.log("drag")}
-            //onScroll={onScrollTab}
+                renderTabBar={() => <CategoryTabBar items={CategoryTitleConfig} />}
+                prerenderingSiblingsNumber={Infinity}
+            // onScrollBeginDrag={() => setDrag(true)}
+            // onScrollEndDrag={() => setDrag(false)}
+            // onScroll={onScrollTab}
             >
                 {CategoryTitleConfig.map(item => (
-                    <Category key={item.title} />
+                    <Category key={item.title} tabLabel={item.title} />
                 ))}
             </ScrollableTabView>
 

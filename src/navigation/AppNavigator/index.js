@@ -6,6 +6,7 @@ import { Icon, Text } from "native-base";
 import HomeScreen from "../../modules/Home";
 import SettingScreen from "../../modules/Setting";
 import CategoryScreen from "../../modules/Category";
+import WishList from "../../modules/WishList";
 import { getCustomTheme } from "../../components";
 
 const Tab = createBottomTabNavigator();
@@ -38,6 +39,17 @@ const BottomTabs = () => {
             }}
                 name="CategoryScreen"
                 component={CategoryScreen}
+            />
+            <Tab.Screen options={{
+                tabBarIcon: ({ focused }) => (
+                    <Icon as={<MaterialIcons name="favorite-border" />} size={'6'} color={!focused ? colors.UNFOCUSED_TAB_BAR : colors.FOCUSED_TAB_BAR} />
+                ),
+                tabBarLabel: ({ focused }) => (
+                    <Text fontSize={14} color={!focused ? colors.UNFOCUSED_TAB_BAR : colors.FOCUSED_TAB_BAR} >Favorite</Text>
+                )
+            }}
+                name="WishList"
+                component={WishList}
             />
             <Tab.Screen options={{
                 tabBarIcon: ({ focused }) => (

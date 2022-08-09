@@ -1,8 +1,8 @@
 //UI
-import React, { useEffect, useState, memo } from "react";
-import { Box, Text, Input, Icon, Image, Button, Row } from "native-base";
+import React, { useEffect, useState, memo, useRef } from "react";
+import { Box, Text, Input, Icon, Image, Button, Row, Center } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity, ImageBackground, View, StyleSheet } from "react-native";
+import { TouchableOpacity, ImageBackground, View, StyleSheet, Image as NativeImage, TextInput, ScrollView } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
@@ -10,10 +10,15 @@ import Swiper from "../../components/Swiper";
 import { ScrollView as Scroll } from "react-native-gesture-handler";
 import { Shadow } from 'react-native-neomorph-shadows';
 import LinearGradient from "react-native-linear-gradient";
+import { margin } from "../../styles";
+
+//Image
+import { ImageUri } from "../../constants/imageUri";
+import { PrintervalLogo } from "../../assets/image/Svg";
 
 //Component
-import { MainCategory, PopularCategory, ProductCard, RecentlyView } from "./component";
-import { getCustomTheme } from "../../components";
+import { MainCategory, PopularCategory, ProductCard, SectionTitle, } from "./component";
+import { getCustomTheme, TextBold, TextNormal, DarkenView, } from "../../components";
 
 //API + Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -21,97 +26,229 @@ import { createSelector } from "@reduxjs/toolkit";
 
 //Utils
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../util";
-
+import { fontSize } from "../../styles/font";
+import { commonStyle } from "../../styles";
 
 const HomeScreen = () => {
     const { colors, fonts } = getCustomTheme();
+    const [onFocus, setFocus] = useState(false);
+    const inputRef = useRef();
+
+    const renderSearchButton = () => {
+        if (!onFocus) return (
+            <TouchableOpacity onPress={() => {
+                setFocus(true);
+                inputRef.current?.focus();
+            }}
+                style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Icon as={<Ionicons name="ios-search" />} size={8} color={'#ff7300'} />
+            </TouchableOpacity>
+        )
+        else return (
+            <TouchableOpacity onPress={() => {
+                setFocus(false);
+                inputRef.current?.blur();
+            }}
+                style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Icon as={<AntDesign name={'arrowleft'} />} color={'#ff7300'} size={7} />
+            </TouchableOpacity>
+        )
+    }
 
     return (
-        <KeyboardAwareScrollView style={{ flex: 1, backgroundColor: 'white' }}
-            contentContainerStyle={{ alignItems: 'center' }}
-            showsVerticalScrollIndicator={false}
-            extraHeight={20}
-            enableOnAndroid>
-            <Box w={'100%'} flexDir={'row'} alignItems={'center'}
-                borderWidth={1} height={'60px'} justifyContent={'center'}>
-                <Icon as={<Ionicons name="ios-notifications-outline" />} size={8} color={'black'}
-                    style={{ position: 'absolute', left: 10 }}
-                />
-                <Text fontSize={18}>PRINTERVAL</Text>
-                <Box w={'20%'} flexDir={'row'} alignItems={'center'} justifyContent={'space-between'}
-                    style={{ position: 'absolute', right: 10 }}>
-                    <TouchableOpacity>
-                        <Icon as={<Ionicons name="ios-search" />} size={8} color={'black'} />
+        <Box flex={1}>
+            <View style={{
+                width: '100%', height: 60, backgroundColor: 'white', zIndex: 999,
+                ...commonStyle.shadow
+            }}>
+                <Box w={'100%'} flexDir={'row'} alignItems={'center'} bg={'white'}
+
+                    height={'100%'} justifyContent={'center'}>
+                    {renderSearchButton()}
+                    <Center flex={6}>
+                        <TextInput style={{ width: '100%' }}
+                            placeholder={'Search for anything on Printerval'}
+                            placeholderTextColor={'gray'}
+                            fontSize={17}
+                            fontFamily={fonts.mainFont}
+                            fontWeight={'300'}
+                            selectionColor={'black'}
+                            ref={inputRef}
+                            blurOnSubmit={false}
+                            onFocus={() => setFocus(true)}
+                        />
+                    </Center>
+
+                </Box>
+            </View>
+            <Box flexGrow={1} flexBasis={1} >
+                <ScrollView
+                    style={{ backgroundColor: 'white', width: '100%', height: '100%' }}
+                    // enableResetScrollToCoords={false}
+                    // contentContainerStyle={{ alignItems: 'center' }}
+                    showsVerticalScrollIndicator={false}
+                    enableOnAndroid
+                    bounces={false}
+                // stickyHeaderIndices={[0]} // khi dùng sticky header phải dùng View chứ k xài Box của native base (dở hơi thật :v )
+                >
+                    {/* Header */}
+                    {/* Banner */}
+                    <Swiper
+                        autoplay={true}
+                        showsPagination={true}
+                        style={{ backgroundColor: 'gray', height: 200, marginTop: 25 }}
+                        scrollEnabled={true}
+                        loop={true}>
+                        <Box w={'100%'} h={'100%'} justifyContent={'center'} alignItems={'center'}>
+                            <Image source={{ uri: ImageUri.Banner1 }} w={'100%'} h={'100%'} alt={"Banner 1"} />
+                        </Box>
+                        <Box w={'100%'} h={'100%'} justifyContent={'center'} alignItems={'center'} bg={'white'}>
+                            <Image source={{ uri: ImageUri.Banner2 }} w={'100%'} h={'100%'} alt={"Banner 2"} />
+                        </Box>
+                        <Box w={'100%'} h={'100%'} justifyContent={'center'} alignItems={'center'}>
+                            <Image source={require("../../assets/banner/banner2.png")} w={'100%'} h={'100%'} alt={"Banner 3"} />
+                        </Box>
+                    </Swiper>
+
+                    {/* Back to school section */}
+                    <TouchableOpacity style={{
+                        width: '100%', height: 200, marginTop: 25
+                    }}>
+                        <ImageBackground
+                            source={require("../../assets/image/BackToSchool.png/")}
+                            style={{ flex: 1, }} >
+                            <DarkenView style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <Text
+                                    fontFamily={fonts.bigCategory}
+                                    fontWeight={700}
+                                    fontSize={32}
+                                    color={'white'}
+                                >
+                                    BACK TO SCHOOL
+                                </Text>
+                                <TextNormal
+                                    marginTop={'-7px'}
+                                    color={'rgba(255,255,255,0.9)'}
+                                    fontSize={18}>
+                                    Designed and sold by artists !
+                                </TextNormal>
+                            </DarkenView>
+                        </ImageBackground>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Icon as={<Feather name="shopping-cart" />} size={8} color={'black'} />
+
+                    {/* Main category section*/}
+                    <Box mt={'25px'} w={'100%'}>
+                        <SectionTitle >
+                            Pick up
+                        </SectionTitle>
+                        <Box
+                            w={'100%'}
+                            px={'3%'}>
+                            {MainCategoryConfig.map((item, i) => (
+                                <Row justifyContent={'space-between'} mt={SCREEN_WIDTH * 0.03} key={i}>
+                                    {
+                                        item.map((item, index) => (
+                                            <MainCategory
+                                                title={item.title}
+                                                key={index}
+                                                index={index}
+                                                requireImage={item.requireImage}
+                                                bg={item.bg}
+                                            />
+                                        ))
+                                    }
+                                </Row>
+                            ))}
+                        </Box>
+                    </Box>
+
+                    {/* Popular design section*/}
+                    <Box mt={'25px'} w={SCREEN_WIDTH}>
+                        <Row alignItems={'center'}>
+                            <TextNormal ml={'20px'}
+                                fontSize={20}>
+                                Popular designs
+                            </TextNormal>
+                            <Icon as={<AntDesign name={'arrowright'} />} color={'black'} size={'20px'} ml={2} />
+                        </Row>
+                        <Scroll
+                            horizontal contentContainerStyle={{ paddingLeft: margin.small, paddingTop: 10, paddingLeft: SCREEN_WIDTH * 0.03 }}
+                            // style={{ marginTop: margin.small }}
+                            showsHorizontalScrollIndicator={false}>
+                            {
+                                PopularCategoryConfig.map(item => <PopularCategory key={item.title}
+                                    title={item.title}
+                                    logo={item.logo}
+                                />)
+                            }
+                        </Scroll>
+                    </Box>
+
+                    {/* Popular design section*/}
+                    <Box mt={'25px'} w={SCREEN_WIDTH}>
+                        <Row alignItems={'center'}>
+                            <TextNormal ml={'20px'}
+                                fontSize={20}>
+                                Top sales today
+                            </TextNormal>
+                            <Icon as={<AntDesign name={'arrowright'} />} color={'black'} size={'20px'} ml={2} />
+                        </Row>
+                        <Scroll
+                            horizontal contentContainerStyle={{ paddingLeft: margin.small, paddingTop: 10, paddingLeft: 12 }}
+                            // style={{ marginTop: margin.small }}
+                            showsHorizontalScrollIndicator={false}>
+                            {
+                                ProductCardConfig.map(item => <ProductCard key={item.id}
+                                    title={item.title}
+                                    price={item.price}
+                                    originPrice={item.originPrice}
+                                />)
+                            }
+                        </Scroll>
+                    </Box>
+
+                    {/* Refer a friend */}
+
+                    <TouchableOpacity style={{
+                        width: '100%', height: 200, marginTop: 30
+                    }} >
+                        <ImageBackground
+                            source={require("../../assets/image/ReferFriend.png/")}
+                            style={{ flex: 1 }} >
+                            <DarkenView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <TextBold
+                                    fontFamily={fonts.bigCategory}
+                                    fontSize={36}
+                                    color={'white'} >
+                                    Refer-A-Friend
+                                </TextBold>
+                                <TextNormal
+                                    color={'rgba(255,255,255,0.9)'}
+                                    mt={'-7px'}
+                                    w={'70%'}
+                                    fontSize={fontSize.subTitlePx}
+                                    lineHeight={'24px'}
+                                    textAlign={'center'}>
+                                    Get $5.00 to spend each time you refer a friend
+                                </TextNormal>
+                            </DarkenView>
+
+                        </ImageBackground>
+
                     </TouchableOpacity>
+                    <Center
+                        py={'4px'}
+                        w={'100%'}
+                        bg={'#83d1f2'}>
+                        <TextBold
+                            fontSize={fontSize.subTitlePx}
+                            color={'white'}>
+                            Refer friends now !
+                        </TextBold>
+                    </Center>
 
-                </Box>
-
-            </Box>
-
-            {/* Banner section*/}
-            <Swiper autoplay={true} showsPagination={false} style={{ backgroundColor: 'gray', height: 200 }}
-                scrollEnabled={true}
-                loop={true}>
-                <Box w={'100%'} h={'100%'} justifyContent={'center'} alignItems={'center'}>
-                    <Image source={require("../../assets/banner/banner1.png")} flex={1} alt={"Banner 1"} >
-                    </Image>
-                </Box>
-                <Box w={'100%'} h={'100%'} justifyContent={'center'} alignItems={'center'}>
-                    <Image source={require("../../assets/banner/banner2.png")} flex={1} alt={"Banner 1"} />
-                </Box>
-                <Box w={'100%'} h={'100%'} justifyContent={'center'} alignItems={'center'}>
-                    <Image source={require("../../assets/banner/banner3.png")} flex={1} alt={"Banner 3"} />
-                </Box>
-            </Swiper>
-
-            {/* Main category section*/}
-            <Box w={'100%'} flexWrap={'wrap'} flexDir={'row'} mt={'15px'}>
-                {MainCategoryConfig.map(item => <MainCategory key={item.title}
-                    title={item.title}
-                    requireImage={item.requireImage}
-                />)}
-            </Box>
-
-            {/* Popular design section*/}
-            <Box w={'100%'} my={'10px'} mt={'40px'} justifyContent={'center'} alignItems={'center'} >
-                <Text fontFamily={fonts.sectionTitle} fontSize={20} color={'#e87809'}>Popular designs</Text>
-                <Button position={'absolute'} right={'0px'} backgroundColor={'transparent'}
-                    rightIcon={<Icon as={<AntDesign />} name={'right'} size={4} color={'black'} />}>
-                    <Text color={'black'} fontSize={16}>More</Text>
-                </Button>
-            </Box>
-            <Box w={'100%'} flexWrap={'wrap'} flexDir={'row'}>
-                {
-                    PopularCategoryConfig.map(item => <PopularCategory key={item.title}
-                        title={item.title}
-                        imageUri={item.uri}
-                        color={item.color}
-                    />)
-                }
-            </Box>
-
-            {/* Top sales section*/}
-            <Box w={'100%'} my={'10px'} mt={'40px'} justifyContent={'center'} alignItems={'center'} >
-                <Text fontFamily={fonts.sectionTitle} fontSize={20} color={'#c52c29'}>Top Sales Off</Text>
-                <Button position={'absolute'} right={'0px'} backgroundColor={'transparent'}
-                    rightIcon={<Icon as={<AntDesign />} name={'right'} size={4} color={'black'} />}>
-                    <Text color={'black'} fontSize={16}>More</Text>
-                </Button>
-            </Box>
-            <Box w={'100%'} flexWrap={'wrap'} flexDir={'row'}>
-                {
-                    ProductCardConfig.map(item => <ProductCard key={item.id}
-                        title={item.title}
-                        price={item.price}
-                        originPrice={item.originPrice}
-                    />)
-                }
-            </Box>
-
-            <Box mt={'50px'}>
+                    {/* Recently viewed */}
+                    {/* <Box mt={'50px'}>
                 <Row alignItems={'center'} justifyContent={'space-between'}>
                     <Text fontFamily={fonts.sectionTitle} fontSize={20} ml={'10px'}>Recently Viewed</Text>
                     <Button backgroundColor={'transparent'}
@@ -135,64 +272,159 @@ const HomeScreen = () => {
                     </Scroll>
                 </Box>
 
-            </Box>
-            <Box h={'100px'}></Box>
+            </Box> */}
+                    <Box h={'20px'}></Box>
+                </ScrollView>
 
-            {/* <Input mt={'200px'} borderWidth={1} h={'50px'} w={'80%'} fontSize={14} /> */}
-        </KeyboardAwareScrollView>
+            </Box>
+
+        </Box>
+
 
 
     )
 }
 const MainCategoryConfig = [
-    {
-        title: "Clothing",
-        requireImage: require("../../assets/image/Category1.png"),
-
-    },
-    {
-        title: "Jacket",
-        requireImage: require("../../assets/image/Category2.png"),
-
-    },
-    {
-        title: "For men",
-        requireImage: require("../../assets/image/Category3.png")
-    },
-    {
-        title: "Stylish",
-        requireImage: require("../../assets/image/Category4.png")
-    },
-    {
-        title: "Other",
-        requireImage: require("../../assets/image/Category2.png")
-    },
-    {
-        title: "Random bullshit",
-        requireImage: require("../../assets/image/Category3.png")
-    }
+    [
+        {
+            title: "Clothing",
+            requireImage: ImageUri.Category1,
+            bg: '#76e197'
+        },
+        {
+            title: "T-Shirts",
+            requireImage: ImageUri.Category2,
+            bg: '#f9a124'
+        },
+    ],
+    [
+        {
+            title: "Tank Tops",
+            requireImage: ImageUri.Category3,
+            bg: '#fe5b79'
+        },
+        {
+            title: "Home & Living",
+            requireImage: ImageUri.Category4,
+            bg: '#8aebdb'
+        },
+    ],
+    [
+        {
+            title: "Caps",
+            requireImage: ImageUri.Category5,
+            bg: '#ffcf2d'
+        },
+        {
+            title: "Accessories",
+            requireImage: ImageUri.Category6,
+            bg: '#4bc1f6'
+        }
+    ]
 ]
 
 const PopularCategoryConfig = [
     {
         title: "Music",
-        uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/uyiir-gpewwmg-gviwx-vsgo-ferh-xwlmvx-pq011121-6180e3eg8284h.trk.png",
-        color: "#F7A34A"
+        logo: [
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/uyiir-gpewwmg-gviwx-vsgo-ferh-xwlmvx-pq011121-6180e3eg8284h.trk.png",
+                color: "#F7A34A"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/hoylv-suhvohb-olyh-617i8818005dd.sqj.png",
+                color: "#227694"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/utre-znk-hkyz-mxgtjsgy-royzkt-zu-krboy-vxkyrke-z-ynoxz-i-db291021-617l9i70730k1.vtm.png",
+                color: "#F8D042"
+            },
+        ]
     },
     {
         title: "Gift",
-        uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/14/coykmaey-znk-znxkk-yzuumky-znk-znxkk-yzuumky-z-ynoxz-i-vi180322-jh2j328178l00g50k89hk39k94li1440.vtm.png",
-        color: "#484572"
+        logo: [
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/14/coykmaey-znk-znxkk-yzuumky-znk-znxkk-yzuumky-z-ynoxz-i-vi180322-jh2j328178l00g50k89hk39k94li1440.vtm.png",
+                color: "#484572"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/sfusp-qjhhmz-xjmmz-sfusp-u-tijsu-d-cu070222-g05e7f956320d7f90e9g56c4727g8047.qoh.png",
+                color: "#62B64D"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/veglipw-irkpmwl-xvmjpi-jvmirhw-x-wlmvx-g-fx230222-ie39h1f511031g7j5e2ij8j127672iej.trk.png",
+                color: "#227694"
+            },
+        ]
     },
     {
         title: "Vintage",
-        uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/lsxip-gepmjsvrme-qshivr-zmrxeki-psks-x-wlmvx-g-xu030222-036jj7h091gg709fi06ghgf7j7h48e27.trk.png",
-        color: "#62B64D"
+        logo: [
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/uyiir-gpewwmg-gviwx-vsgo-ferh-xwlmvx-pq011121-6180e3eg8284h.trk.png",
+                color: "#F7A34A"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/hoylv-suhvohb-olyh-617i8818005dd.sqj.png",
+                color: "#227694"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/utre-znk-hkyz-mxgtjsgy-royzkt-zu-krboy-vxkyrke-z-ynoxz-i-db291021-617l9i70730k1.vtm.png",
+                color: "#F8D042"
+            },
+        ]
     },
     {
-        title: "Birthday",
-        uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/14/kix-mr-pswiv-ai39vi-hsmrk-fyxx-wxyjj-yjs-efhygxmsr-wxmgoiv-g-hr-080422-h2i4g0023286gh7251h51f755110e58e.trk.png",
-        color: "#FA5659"
+        title: "Funny",
+        logo: [
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/14/coykmaey-znk-znxkk-yzuumky-znk-znxkk-yzuumky-z-ynoxz-i-vi180322-jh2j328178l00g50k89hk39k94li1440.vtm.png",
+                color: "#484572"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/sfusp-qjhhmz-xjmmz-sfusp-u-tijsu-d-cu070222-g05e7f956320d7f90e9g56c4727g8047.qoh.png",
+                color: "#62B64D"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/veglipw-irkpmwl-xvmjpi-jvmirhw-x-wlmvx-g-fx230222-ie39h1f511031g7j5e2ij8j127672iej.trk.png",
+                color: "#227694"
+            },
+        ]
+    },
+    {
+        title: "Football",
+        logo: [
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/uyiir-gpewwmg-gviwx-vsgo-ferh-xwlmvx-pq011121-6180e3eg8284h.trk.png",
+                color: "#F7A34A"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/hoylv-suhvohb-olyh-617i8818005dd.sqj.png",
+                color: "#227694"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/utre-znk-hkyz-mxgtjsgy-royzkt-zu-krboy-vxkyrke-z-ynoxz-i-db291021-617l9i70730k1.vtm.png",
+                color: "#F8D042"
+            },
+        ]
+    },
+    {
+        title: "Music2",
+        logo: [
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/14/coykmaey-znk-znxkk-yzuumky-znk-znxkk-yzuumky-z-ynoxz-i-vi180322-jh2j328178l00g50k89hk39k94li1440.vtm.png",
+                color: "#484572"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/sfusp-qjhhmz-xjmmz-sfusp-u-tijsu-d-cu070222-g05e7f956320d7f90e9g56c4727g8047.qoh.png",
+                color: "#62B64D"
+            },
+            {
+                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/veglipw-irkpmwl-xvmjpi-jvmirhw-x-wlmvx-g-fx230222-ie39h1f511031g7j5e2ij8j127672iej.trk.png",
+                color: "#227694"
+            },
+        ]
     },
 ]
 

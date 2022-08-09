@@ -784,6 +784,7 @@ export default class extends Component {
                 onScrollEndDrag={this.onScrollEndDrag}
                 style={this.props.scrollViewStyle}
                 scrollEnabled={this.props.scrollEnabled}
+            // removeClippedSubviews={true}
             >
                 {pages}
             </ScrollView>

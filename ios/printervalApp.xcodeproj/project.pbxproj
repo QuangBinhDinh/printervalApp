@@ -35,6 +35,11 @@
 		CB207F332893DBEE003D91D2 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CB207F322893DBEE003D91D2 /* FirebaseAnalytics */; };
 		CB207F352893DBEE003D91D2 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CB207F342893DBEE003D91D2 /* FirebaseCrashlytics */; };
 		CB207F372893DBEE003D91D2 /* FirebaseDynamicLinks in Frameworks */ = {isa = PBXBuildFile; productRef = CB207F362893DBEE003D91D2 /* FirebaseDynamicLinks */; };
+		D19FE44CD73149E9BB5ECB0D /* School.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 732D950CAE484F218C38A5BB /* School.ttf */; };
+		13B3A7B968B046F79AAA0D67 /* heebo.bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C520AA502C224869841B96AB /* heebo.bold.ttf */; };
+		BD9AE85D592940D496E78FD3 /* heebo.light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4FB1CC5CCD044D1BBFC8AC86 /* heebo.light.ttf */; };
+		EC4F314A32E74A91AD20EAF1 /* heebo.medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0BBED038E3AC44AE89169BF9 /* heebo.medium.ttf */; };
+		630EF515944D48D3907B0797 /* heebo.regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 710AEB1647824A1698F701D9 /* heebo.regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +88,11 @@
 		EB604A5285794DBF8249BFBB /* KeepCalm-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "KeepCalm-Medium.ttf"; path = "../src/assets/fonts/KeepCalm-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F2B54A56DF26D2433BC8FF93 /* libPods-printervalApp-printervalAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-printervalApp-printervalAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		732D950CAE484F218C38A5BB /* School.ttf */ = {isa = PBXFileReference; name = "School.ttf"; path = "../src/assets/fonts/School.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C520AA502C224869841B96AB /* heebo.bold.ttf */ = {isa = PBXFileReference; name = "heebo.bold.ttf"; path = "../src/assets/fonts/heebo.bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4FB1CC5CCD044D1BBFC8AC86 /* heebo.light.ttf */ = {isa = PBXFileReference; name = "heebo.light.ttf"; path = "../src/assets/fonts/heebo.light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0BBED038E3AC44AE89169BF9 /* heebo.medium.ttf */ = {isa = PBXFileReference; name = "heebo.medium.ttf"; path = "../src/assets/fonts/heebo.medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		710AEB1647824A1698F701D9 /* heebo.regular.ttf */ = {isa = PBXFileReference; name = "heebo.regular.ttf"; path = "../src/assets/fonts/heebo.regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +174,11 @@
 			isa = PBXGroup;
 			children = (
 				EB604A5285794DBF8249BFBB /* KeepCalm-Medium.ttf */,
+				732D950CAE484F218C38A5BB /* School.ttf */,
+				C520AA502C224869841B96AB /* heebo.bold.ttf */,
+				4FB1CC5CCD044D1BBFC8AC86 /* heebo.light.ttf */,
+				0BBED038E3AC44AE89169BF9 /* heebo.medium.ttf */,
+				710AEB1647824A1698F701D9 /* heebo.regular.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -347,6 +362,11 @@
 				CB207F2428937FBE003D91D2 /* MaterialCommunityIcons.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				92B82D4ED9D54C7C892EF55A /* KeepCalm-Medium.ttf in Resources */,
+				D19FE44CD73149E9BB5ECB0D /* School.ttf in Resources */,
+				13B3A7B968B046F79AAA0D67 /* heebo.bold.ttf in Resources */,
+				BD9AE85D592940D496E78FD3 /* heebo.light.ttf in Resources */,
+				EC4F314A32E74A91AD20EAF1 /* heebo.medium.ttf in Resources */,
+				630EF515944D48D3907B0797 /* heebo.regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

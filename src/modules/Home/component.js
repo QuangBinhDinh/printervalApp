@@ -6,76 +6,129 @@ import { createSelector } from "@reduxjs/toolkit";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
+import LinearGradient from "react-native-linear-gradient";
+import { Shadow } from 'react-native-neomorph-shadows';
 
-import { getCustomTheme } from "../../components";
+import { getCustomTheme, TextBold, DarkenView, TextNormal } from "../../components";
 import { SCREEN_WIDTH } from "../../util";
+import { margin, commonStyle } from "../../styles";
+import { fontSize } from "../../styles/font";
 
-export const MainCategory = memo(({ title, requireImage, screen }) => {
-    const { colors, fontConfig, fonts } = getCustomTheme();
+const SectionTitle = ({ children, style, textStyle }) => (
+    <Row alignItems={'center'} ml={'5%'} {...style}>
+        <TextNormal fontSize={fontSize.sectionTitle} {...textStyle}>{children}</TextNormal>
+        <Icon as={<AntDesign name={'arrowright'} />} color={'black'} size={'20px'} ml={2} />
+    </Row>
+)
+
+const MainCategory = memo(({ title, requireImage, bg, screen, style, index }) => {
+    // const getPaddingX = () => {
+    //     if (index % 2 == 0) return { paddingLeft: 0 }
+    //     else return { paddingRight: 0 }
+    // }
+    // const getPaddingY = () => {
+    //     if (index <= 1) return { paddingTop: 4 }
+    //     else return {}
+    // }
     return (
-        <TouchableOpacity style={{ width: '50%', aspectRatio: 1, padding: 2 }}>
-            <ImageBackground style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} source={requireImage}>
-                <Text fontSize={25} fontFamily={fonts.bigCategory} color={'white'} textAlign={'center'}>{title}</Text>
-            </ImageBackground>
+        <TouchableOpacity style={{
+            width: SCREEN_WIDTH * 0.455, height: 140,
+            ...commonStyle.shadow
+        }}>
+            <Box flex={1}
+                borderRadius={10}
+                overflow={'hidden'}>
+                <ImageBackground
+                    style={{ flex: 1, justifyContent: 'flex-end' }}
+                    source={{ uri: requireImage }} >
+                    <DarkenView style={{ flex: 1, justifyContent: 'flex-end' }}
+                        opacity={0.2} >
+                        <TextBold
+                            fontSize={fontSize.subTitlePx}
+                            color={'white'}
+                            ml={'10px'}
+                            mb={1} >
+                            {title}
+                        </TextBold>
+                    </DarkenView>
+                </ImageBackground>
+            </Box>
+
         </TouchableOpacity>
     )
 })
 
-
-export const PopularCategory = memo(({ title, imageUri, color }) => {
+const PopularCategory = memo(({ title, imageUri, logo }) => {
     const { colors, fonts } = getCustomTheme();
     return (
-
         <TouchableOpacity style={{//note: element co aspectRatio phai co child ben trong 
-            width: '50%', aspectRatio: 1, padding: 2,
+            marginRight: SCREEN_WIDTH * 0.03, overflow: 'hidden',
         }}>
-
-            <Box flex={1} backgroundColor={color} justifyContent={'center'} alignItems={'center'}>
-                {/* <LinearGradient
-                    style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}
-                    colors={['#00000000', '#000000']}
-                    start={{ x: 0, y: 0.3 }}
-                    end={{ x: 0, y: 1 }}> */}
-                <Image style={{ width: '50%', aspectRatio: 1 }} source={{ uri: imageUri }} />
-                {/* </LinearGradient> */}
-
-            </Box>
+            <Row w={SCREEN_WIDTH * 0.6} h={140} borderRadius={8} overflow={'hidden'} >
+                <Center flex={2.5} bg={logo[0]?.color}>
+                    <Image
+                        style={{ width: '60%', height: '60%' }}
+                        source={{ uri: logo[0].uri }}
+                        resizeMode={'contain'}
+                    />
+                </Center>
+                <Box flex={1}>
+                    <Center flex={1} bg={logo[1]?.color} >
+                        <Image
+                            style={{ width: '80%', height: '80%' }}
+                            source={{ uri: logo[1].uri }}
+                            resizeMode={'contain'}
+                        />
+                    </Center>
+                    <Center flex={1} bg={logo[2]?.color} >
+                        <Image
+                            style={{ width: '80%', height: '80%' }}
+                            source={{ uri: logo[2].uri }}
+                            resizeMode={'contain'}
+                        />
+                    </Center>
+                </Box>
+            </Row>
+            <TextNormal
+                fontSize={fontSize.subTitlePx}
+                // color={'black'}
+                mt={'4px'}
+                ml={2}
+            >
+                {title}
+            </TextNormal>
         </TouchableOpacity>
-        // {/* <Text fontSize={16} fontFamily={fonts.bigCategory} textAlign={'center'}>{title}</Text> */}
-
     )
 })
 
-export const ProductCard = memo(({ containerStyle, title, price, originPrice }) => {
+const ProductCard = memo(({ containerStyle, title, price, originPrice }) => {
     const { colors, fonts } = getCustomTheme();
 
     return (
         //note: element co aspectRatio phai co child ben trong 
         <TouchableOpacity style={{
-            width: '50%', aspectRatio: 0.7, padding: 2, borderWidth: 0.5, borderColor: colors.LIGHT_BORDER,
+            width: SCREEN_WIDTH * 0.3, marginRight: SCREEN_WIDTH * 0.03, backgroundColor: 'white',
             ...containerStyle
         }}>
-            <Box flex={1}>
-                <Box flex={7} p={'2px'}>
-                    <Image style={{ flex: 1 }} source={{ uri: 'https://liveview.printerval.com/image/630x630/t-shirts-men-heavyweight-t-shirt,black,sprv1-1038787489,2d2d2d.jpeg' }} />
-                    <Center borderRadius={30} position={'absolute'} backgroundColor={colors.SALEOFF_COLOR}
-                        left={'7px'} top={'10px'} w={'25%'} style={{ aspectRatio: 1 }} >
-                        <Text fontSize={14} color={'white'} lineHeight={18} textAlign={'center'}>30% OFF</Text>
-                    </Center>
-                </Box>
-                <Box flex={3} justifyContent={'space-between'} px={'4px'} >
-                    <Text fontSize={14} fontWeight={'bold'} lineHeight={18} numberOfLines={2} mt={'5px'}>{title}</Text>
-                    <Row alignItems={'center'}>
-                        <Text fontSize={14} color={colors.PRICE_TAG_COLOR}>{price}</Text>
-                        <Text fontSize={12} color={colors.PRICE_ORIGIN_COLOR} textDecorationLine={'line-through'} ml={'5px'}>{originPrice}</Text>
-                    </Row>
-                </Box>
+            <Box w={'100%'} h={'120px'} p={margin.halfSmallPx}>
+                <Image
+                    resizeMode={'contain'}
+                    style={{ width: '100%', height: '100%' }}
+                    source={{ uri: 'https://liveview.printerval.com/image/630x630/t-shirts-men-heavyweight-t-shirt,black,sprv1-1038787489,2d2d2d.jpeg' }} />
             </Box>
+            <Box justifyContent={'space-between'} pt={'4px'} px={'4px'}>
+                <TextNormal numberOfLines={2} lineHeight={'18px'} fontSize={fontSize.detailTitlePx}>{title}</TextNormal>
+                <Row alignItems={'center'} mt={'10px'}>
+                    <TextNormal fontSize={fontSize.detailTitlePx} color={colors.PRICE_TAG_COLOR}>{price}</TextNormal>
+                    <Text fontSize={12} color={colors.PRICE_ORIGIN_COLOR} textDecorationLine={'line-through'} ml={'5px'}>{originPrice}</Text>
+                </Row>
+            </Box>
+
         </TouchableOpacity>
     )
 })
 
-export const RecentlyView = memo(({ containerStyle, title, price, originPrice }) => {
+const RecentlyView = memo(({ containerStyle, title, price, originPrice }) => {
     const { colors } = getCustomTheme();
 
     return (
@@ -86,10 +139,6 @@ export const RecentlyView = memo(({ containerStyle, title, price, originPrice })
             <Box flex={1}>
                 <Box flex={7} p={'2px'}>
                     <Image style={{ flex: 1 }} source={{ uri: 'https://liveview.printerval.com/image/630x630/t-shirts-men-heavyweight-t-shirt,black,sprv1-1038787489,2d2d2d.jpeg' }} />
-                    {/* <Center borderRadius={30} position={'absolute'} backgroundColor={colors.SALEOFF_COLOR}
-                        left={'7px'} top={'10px'} w={'25%'} style={{ aspectRatio: 1 }} >
-                        <Text fontSize={14} color={'white'} lineHeight={18} textAlign={'center'}>30% OFF</Text>
-                    </Center> */}
                 </Box>
                 <Box flex={3} justifyContent={'space-between'} px={'4px'} >
                     <Text fontSize={12} fontWeight={'bold'} lineHeight={16} numberOfLines={1} mt={'5px'}>{title}</Text>
@@ -102,3 +151,9 @@ export const RecentlyView = memo(({ containerStyle, title, price, originPrice })
         </TouchableOpacity>
     )
 })
+export { SectionTitle, MainCategory, ProductCard, PopularCategory, RecentlyView }
+{/* <LinearGradient
+                    style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}
+                    colors={['#00000000', '#000000']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}> */}
