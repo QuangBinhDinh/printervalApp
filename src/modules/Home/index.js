@@ -2,7 +2,7 @@
 import React, { useEffect, useState, memo, useRef } from "react";
 import { Box, Text, Input, Icon, Image, Button, Row, Center } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity, ImageBackground, View, StyleSheet, Image as NativeImage, TextInput, ScrollView } from "react-native";
+import { TouchableOpacity, ImageBackground, View, StyleSheet, Image as NativeImage, TextInput, ScrollView, Animated, } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
@@ -14,11 +14,13 @@ import { margin } from "../../styles";
 
 //Image
 import { ImageUri } from "../../constants/imageUri";
-import { PrintervalLogo } from "../../assets/image/Svg";
+import { PrintervalLogo, BottomBorder } from "../../assets/image/Svg";
 
 //Component
 import { MainCategory, PopularCategory, ProductCard, SectionTitle, } from "./component";
 import { getCustomTheme, TextBold, TextNormal, DarkenView, } from "../../components";
+import { MainCategoryConfig, PopularCategoryConfig, ProductCardConfig } from "./fakeData";
+import Search from "../Search";
 
 //API + Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -28,70 +30,92 @@ import { createSelector } from "@reduxjs/toolkit";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../util";
 import { fontSize } from "../../styles/font";
 import { commonStyle } from "../../styles";
+import { useHeaderAnimation, useInputAnimation } from "./useAnimation";
 
+const AnimatedRow = Animated.createAnimatedComponent(Row)
+    ;
 const HomeScreen = () => {
     const { colors, fonts } = getCustomTheme();
-    const [onFocus, setFocus] = useState(false);
+    const headerColor = useRef(new Animated.Value(0)).current;
+
+    const { headerToWhite, headerToNormal, headerColorNew } = useHeaderAnimation(colors.PINK_BG);
+    const { inputToGray, inputToNormal, inputColorNew } = useInputAnimation(colors.GRAY_INPUT);
+    const [searchVisiblie, setSearchVisible] = useState(false);
     const inputRef = useRef();
 
-    const renderSearchButton = () => {
-        if (!onFocus) return (
+    const renderSearchButton = () => { // render button search header
+        if (!searchVisiblie) return (
             <TouchableOpacity onPress={() => {
-                setFocus(true);
+                setSearchVisible(true);
+                headerToWhite(); // animation color
+                inputToGray();
                 inputRef.current?.focus();
             }}
-                style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Icon as={<Ionicons name="ios-search" />} size={8} color={'#ff7300'} />
+                style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent' }}>
+                <Icon as={<Feather name="search" />} size={5} color={'#ff7300'} />
             </TouchableOpacity>
         )
         else return (
             <TouchableOpacity onPress={() => {
-                setFocus(false);
+                setSearchVisible(false);
+                headerToNormal();// animation color
+                inputToNormal();
                 inputRef.current?.blur();
             }}
-                style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Icon as={<AntDesign name={'arrowleft'} />} color={'#ff7300'} size={7} />
+                style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent' }}>
+                <Icon as={<Feather name={'arrow-left'} />} size={5} color={'#ff7300'} />
             </TouchableOpacity>
         )
     }
 
     return (
-        <Box flex={1}>
-            <View style={{
-                width: '100%', height: 60, backgroundColor: 'white', zIndex: 999,
-                ...commonStyle.shadow
+        <Box flex={1} bg={'white'}>
+            {/* Header */}
+            <Animated.View style={{
+                width: '100%', height: 90, backgroundColor: headerColorNew,
+                justifyContent: 'center', alignItems: 'center', zIndex: 999
             }}>
-                <Box w={'100%'} flexDir={'row'} alignItems={'center'} bg={'white'}
-
-                    height={'100%'} justifyContent={'center'}>
+                <AnimatedRow w={'94%'} h={'48px'}
+                    style={{ backgroundColor: inputColorNew }}
+                    borderRadius={60}
+                    overflow={'hidden'}
+                    alignItem={'center'}>
                     {renderSearchButton()}
-                    <Center flex={6}>
-                        <TextInput style={{ width: '100%' }}
+                    <Row flex={6}>
+                        <TextInput style={{ width: '100%', }}
                             placeholder={'Search for anything on Printerval'}
                             placeholderTextColor={'gray'}
-                            fontSize={17}
+                            fontSize={16}
                             fontFamily={fonts.mainFont}
                             fontWeight={'300'}
                             selectionColor={'black'}
                             ref={inputRef}
                             blurOnSubmit={false}
-                            onFocus={() => setFocus(true)}
+                            onFocus={() => {
+                                setSearchVisible(true);
+                                headerToWhite();
+                                inputToGray();
+                            }}
                         />
-                    </Center>
+                    </Row>
+                </AnimatedRow>
+            </Animated.View>
+            <Image
+                source={require('../../assets/image/PinkBottom.png')}
+                w={'100%'}
+                h={'10px'}
+                zIndex={999}
+            />
 
-                </Box>
-            </View>
+            {/* Search screen */}
+            {searchVisiblie && <Search />}
             <Box flexGrow={1} flexBasis={1} >
                 <ScrollView
-                    style={{ backgroundColor: 'white', width: '100%', height: '100%' }}
-                    // enableResetScrollToCoords={false}
-                    // contentContainerStyle={{ alignItems: 'center' }}
+                    style={{ backgroundColor: 'white', width: '100%', height: '100%', marginTop: -10 }}
                     showsVerticalScrollIndicator={false}
                     enableOnAndroid
-                    bounces={false}
-                // stickyHeaderIndices={[0]} // khi dùng sticky header phải dùng View chứ k xài Box của native base (dở hơi thật :v )
-                >
-                    {/* Header */}
+                    bounces={false}  >
+
                     {/* Banner */}
                     <Swiper
                         autoplay={true}
@@ -138,9 +162,7 @@ const HomeScreen = () => {
 
                     {/* Main category section*/}
                     <Box mt={'25px'} w={'100%'}>
-                        <SectionTitle >
-                            Pick up
-                        </SectionTitle>
+                        <SectionTitle > Pick up</SectionTitle>
                         <Box
                             w={'100%'}
                             px={'3%'}>
@@ -164,35 +186,31 @@ const HomeScreen = () => {
 
                     {/* Popular design section*/}
                     <Box mt={'25px'} w={SCREEN_WIDTH}>
-                        <Row alignItems={'center'}>
-                            <TextNormal ml={'20px'}
-                                fontSize={20}>
-                                Popular designs
-                            </TextNormal>
-                            <Icon as={<AntDesign name={'arrowright'} />} color={'black'} size={'20px'} ml={2} />
-                        </Row>
+                        <SectionTitle > Popular designs</SectionTitle>
                         <Scroll
-                            horizontal contentContainerStyle={{ paddingLeft: margin.small, paddingTop: 10, paddingLeft: SCREEN_WIDTH * 0.03 }}
+                            horizontal contentContainerStyle={{ paddingLeft: SCREEN_WIDTH * 0.03 }}
                             // style={{ marginTop: margin.small }}
                             showsHorizontalScrollIndicator={false}>
                             {
-                                PopularCategoryConfig.map(item => <PopularCategory key={item.title}
-                                    title={item.title}
-                                    logo={item.logo}
-                                />)
+                                PopularCategoryConfig.map((item, i) => (
+                                    <Box mr={SCREEN_WIDTH * 0.03} key={i}>
+                                        {
+                                            item.map((item, index) => (
+                                                <PopularCategory key={item.title}
+                                                    title={item.title}
+                                                    logo={item.logo}
+                                                />
+                                            ))
+                                        }
+                                    </Box>
+                                ))
                             }
                         </Scroll>
                     </Box>
 
-                    {/* Popular design section*/}
+                    {/* Top Sales section*/}
                     <Box mt={'25px'} w={SCREEN_WIDTH}>
-                        <Row alignItems={'center'}>
-                            <TextNormal ml={'20px'}
-                                fontSize={20}>
-                                Top sales today
-                            </TextNormal>
-                            <Icon as={<AntDesign name={'arrowright'} />} color={'black'} size={'20px'} ml={2} />
-                        </Row>
+                        <SectionTitle >Top sales today</SectionTitle>
                         <Scroll
                             horizontal contentContainerStyle={{ paddingLeft: margin.small, paddingTop: 10, paddingLeft: 12 }}
                             // style={{ marginTop: margin.small }}
@@ -271,7 +289,6 @@ const HomeScreen = () => {
                         }
                     </Scroll>
                 </Box>
-
             </Box> */}
                     <Box h={'20px'}></Box>
                 </ScrollView>
@@ -284,189 +301,5 @@ const HomeScreen = () => {
 
     )
 }
-const MainCategoryConfig = [
-    [
-        {
-            title: "Clothing",
-            requireImage: ImageUri.Category1,
-            bg: '#76e197'
-        },
-        {
-            title: "T-Shirts",
-            requireImage: ImageUri.Category2,
-            bg: '#f9a124'
-        },
-    ],
-    [
-        {
-            title: "Tank Tops",
-            requireImage: ImageUri.Category3,
-            bg: '#fe5b79'
-        },
-        {
-            title: "Home & Living",
-            requireImage: ImageUri.Category4,
-            bg: '#8aebdb'
-        },
-    ],
-    [
-        {
-            title: "Caps",
-            requireImage: ImageUri.Category5,
-            bg: '#ffcf2d'
-        },
-        {
-            title: "Accessories",
-            requireImage: ImageUri.Category6,
-            bg: '#4bc1f6'
-        }
-    ]
-]
-
-const PopularCategoryConfig = [
-    {
-        title: "Music",
-        logo: [
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/uyiir-gpewwmg-gviwx-vsgo-ferh-xwlmvx-pq011121-6180e3eg8284h.trk.png",
-                color: "#F7A34A"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/hoylv-suhvohb-olyh-617i8818005dd.sqj.png",
-                color: "#227694"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/utre-znk-hkyz-mxgtjsgy-royzkt-zu-krboy-vxkyrke-z-ynoxz-i-db291021-617l9i70730k1.vtm.png",
-                color: "#F8D042"
-            },
-        ]
-    },
-    {
-        title: "Gift",
-        logo: [
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/14/coykmaey-znk-znxkk-yzuumky-znk-znxkk-yzuumky-z-ynoxz-i-vi180322-jh2j328178l00g50k89hk39k94li1440.vtm.png",
-                color: "#484572"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/sfusp-qjhhmz-xjmmz-sfusp-u-tijsu-d-cu070222-g05e7f956320d7f90e9g56c4727g8047.qoh.png",
-                color: "#62B64D"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/veglipw-irkpmwl-xvmjpi-jvmirhw-x-wlmvx-g-fx230222-ie39h1f511031g7j5e2ij8j127672iej.trk.png",
-                color: "#227694"
-            },
-        ]
-    },
-    {
-        title: "Vintage",
-        logo: [
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/uyiir-gpewwmg-gviwx-vsgo-ferh-xwlmvx-pq011121-6180e3eg8284h.trk.png",
-                color: "#F7A34A"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/hoylv-suhvohb-olyh-617i8818005dd.sqj.png",
-                color: "#227694"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/utre-znk-hkyz-mxgtjsgy-royzkt-zu-krboy-vxkyrke-z-ynoxz-i-db291021-617l9i70730k1.vtm.png",
-                color: "#F8D042"
-            },
-        ]
-    },
-    {
-        title: "Funny",
-        logo: [
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/14/coykmaey-znk-znxkk-yzuumky-znk-znxkk-yzuumky-z-ynoxz-i-vi180322-jh2j328178l00g50k89hk39k94li1440.vtm.png",
-                color: "#484572"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/sfusp-qjhhmz-xjmmz-sfusp-u-tijsu-d-cu070222-g05e7f956320d7f90e9g56c4727g8047.qoh.png",
-                color: "#62B64D"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/veglipw-irkpmwl-xvmjpi-jvmirhw-x-wlmvx-g-fx230222-ie39h1f511031g7j5e2ij8j127672iej.trk.png",
-                color: "#227694"
-            },
-        ]
-    },
-    {
-        title: "Football",
-        logo: [
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/uyiir-gpewwmg-gviwx-vsgo-ferh-xwlmvx-pq011121-6180e3eg8284h.trk.png",
-                color: "#F7A34A"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/hoylv-suhvohb-olyh-617i8818005dd.sqj.png",
-                color: "#227694"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/12/utre-znk-hkyz-mxgtjsgy-royzkt-zu-krboy-vxkyrke-z-ynoxz-i-db291021-617l9i70730k1.vtm.png",
-                color: "#F8D042"
-            },
-        ]
-    },
-    {
-        title: "Music2",
-        logo: [
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/14/coykmaey-znk-znxkk-yzuumky-znk-znxkk-yzuumky-z-ynoxz-i-vi180322-jh2j328178l00g50k89hk39k94li1440.vtm.png",
-                color: "#484572"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/sfusp-qjhhmz-xjmmz-sfusp-u-tijsu-d-cu070222-g05e7f956320d7f90e9g56c4727g8047.qoh.png",
-                color: "#62B64D"
-            },
-            {
-                uri: "https://gdn.printerval.com/unsafe/fit-in/500x500/assets.printerval.com/2022/05/13/veglipw-irkpmwl-xvmjpi-jvmirhw-x-wlmvx-g-fx230222-ie39h1f511031g7j5e2ij8j127672iej.trk.png",
-                color: "#227694"
-            },
-        ]
-    },
-]
-
-const ProductCardConfig = [
-    {
-        id: '1',
-        title: "Universal Black Rock T-shirt For Men  ",
-        price: '$12.95',
-        originPrice: '$15.95'
-    },
-    {
-        id: '2',
-        title: "Universal Black Rock T-shirt Special Version For Men  ",
-        price: '$12.95',
-        originPrice: '$15.95'
-    },
-    {
-        id: '3',
-        title: "Chirstmas T-shirt For Men  ",
-        price: '$12.95',
-        originPrice: '$15.95'
-    },
-    {
-        id: '4',
-        title: "Universal Black Rock T-shirt For Men  ",
-        price: '$12.95',
-        originPrice: '$15.95'
-    },
-    {
-        id: '5',
-        title: "Universal Black Rock T-shirt For Men  ",
-        price: '$12.95',
-        originPrice: '$15.95'
-    },
-    {
-        id: '6',
-        title: "Universal Black Rock T-shirt For Men  ",
-        price: '$12.95',
-        originPrice: '$15.95'
-    }
-]
-
-
 
 export default HomeScreen

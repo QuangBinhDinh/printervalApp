@@ -1,7 +1,7 @@
 import React, { useEffect, useState, memo } from "react";
 import { Box, Center, Row, Text, Input, Icon, Image, Button } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity, ImageBackground, View } from "react-native";
+import { TouchableOpacity, ImageBackground, Platform } from "react-native";
 import { createSelector } from "@reduxjs/toolkit";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -15,21 +15,17 @@ import { margin, commonStyle } from "../../styles";
 import { fontSize } from "../../styles/font";
 
 const SectionTitle = ({ children, style, textStyle }) => (
-    <Row alignItems={'center'} ml={'5%'} {...style}>
+    <Row alignItems={'center'} ml={'3%'}  {...style}>
         <TextNormal fontSize={fontSize.sectionTitle} {...textStyle}>{children}</TextNormal>
-        <Icon as={<AntDesign name={'arrowright'} />} color={'black'} size={'20px'} ml={2} />
+        <Icon as={<AntDesign name={'arrowright'} />} color={'black'} size={'20px'} ml={2}
+            mt={Platform.OS == 'android' ? 1 : 0} />
+        {/* Font family render khac nhau tren android va ios ,nen set margin cho icon 
+            * dm font         
+            */}
     </Row>
 )
 
 const MainCategory = memo(({ title, requireImage, bg, screen, style, index }) => {
-    // const getPaddingX = () => {
-    //     if (index % 2 == 0) return { paddingLeft: 0 }
-    //     else return { paddingRight: 0 }
-    // }
-    // const getPaddingY = () => {
-    //     if (index <= 1) return { paddingTop: 4 }
-    //     else return {}
-    // }
     return (
         <TouchableOpacity style={{
             width: SCREEN_WIDTH * 0.455, height: 140,
@@ -61,56 +57,59 @@ const MainCategory = memo(({ title, requireImage, bg, screen, style, index }) =>
 const PopularCategory = memo(({ title, imageUri, logo }) => {
     const { colors, fonts } = getCustomTheme();
     return (
-        <TouchableOpacity style={{//note: element co aspectRatio phai co child ben trong 
-            marginRight: SCREEN_WIDTH * 0.03, overflow: 'hidden',
-        }}>
-            <Row w={SCREEN_WIDTH * 0.6} h={140} borderRadius={8} overflow={'hidden'} >
-                <Center flex={2.5} bg={logo[0]?.color}>
-                    <Image
-                        style={{ width: '60%', height: '60%' }}
-                        source={{ uri: logo[0].uri }}
-                        resizeMode={'contain'}
-                    />
-                </Center>
-                <Box flex={1}>
-                    <Center flex={1} bg={logo[1]?.color} >
+        <Box mt={SCREEN_WIDTH * 0.03}>
+            <TouchableOpacity style={{
+                ...commonStyle.shadow
+            }}>
+                <Row w={SCREEN_WIDTH * 0.6} h={140} borderRadius={8} overflow={'hidden'} >
+                    <Center flex={2.5} bg={logo[0]?.color}>
                         <Image
-                            style={{ width: '80%', height: '80%' }}
-                            source={{ uri: logo[1].uri }}
+                            style={{ width: '60%', height: '60%' }}
+                            source={{ uri: logo[0].uri }}
                             resizeMode={'contain'}
                         />
                     </Center>
-                    <Center flex={1} bg={logo[2]?.color} >
-                        <Image
-                            style={{ width: '80%', height: '80%' }}
-                            source={{ uri: logo[2].uri }}
-                            resizeMode={'contain'}
-                        />
-                    </Center>
-                </Box>
-            </Row>
+                    <Box flex={1}>
+                        <Center flex={1} bg={logo[1]?.color} >
+                            <Image
+                                style={{ width: '80%', height: '80%' }}
+                                source={{ uri: logo[1].uri }}
+                                resizeMode={'contain'}
+                            />
+                        </Center>
+                        <Center flex={1} bg={logo[2]?.color} >
+                            <Image
+                                style={{ width: '80%', height: '80%' }}
+                                source={{ uri: logo[2].uri }}
+                                resizeMode={'contain'}
+                            />
+                        </Center>
+                    </Box>
+                </Row>
+
+            </TouchableOpacity>
             <TextNormal
                 fontSize={fontSize.subTitlePx}
                 // color={'black'}
-                mt={'4px'}
-                ml={2}
-            >
+                mt={'6px'}
+                ml={2} >
                 {title}
             </TextNormal>
-        </TouchableOpacity>
+        </Box>
+
     )
 })
 
 const ProductCard = memo(({ containerStyle, title, price, originPrice }) => {
-    const { colors, fonts } = getCustomTheme();
+    const { colors } = getCustomTheme();
 
     return (
         //note: element co aspectRatio phai co child ben trong 
         <TouchableOpacity style={{
-            width: SCREEN_WIDTH * 0.3, marginRight: SCREEN_WIDTH * 0.03, backgroundColor: 'white',
+            width: SCREEN_WIDTH * 0.38, marginRight: SCREEN_WIDTH * 0.03, backgroundColor: 'white',
             ...containerStyle
         }}>
-            <Box w={'100%'} h={'120px'} p={margin.halfSmallPx}>
+            <Box w={'100%'} h={SCREEN_WIDTH * 0.38} p={margin.halfSmallPx}>
                 <Image
                     resizeMode={'contain'}
                     style={{ width: '100%', height: '100%' }}
@@ -119,8 +118,8 @@ const ProductCard = memo(({ containerStyle, title, price, originPrice }) => {
             <Box justifyContent={'space-between'} pt={'4px'} px={'4px'}>
                 <TextNormal numberOfLines={2} lineHeight={'18px'} fontSize={fontSize.detailTitlePx}>{title}</TextNormal>
                 <Row alignItems={'center'} mt={'10px'}>
-                    <TextNormal fontSize={fontSize.detailTitlePx} color={colors.PRICE_TAG_COLOR}>{price}</TextNormal>
-                    <Text fontSize={12} color={colors.PRICE_ORIGIN_COLOR} textDecorationLine={'line-through'} ml={'5px'}>{originPrice}</Text>
+                    <TextNormal fontSize={16} color={colors.PRICE_TAG_COLOR}>{price}</TextNormal>
+                    <Text fontSize={14} color={colors.PRICE_ORIGIN_COLOR} textDecorationLine={'line-through'} ml={'5px'}>{originPrice}</Text>
                 </Row>
             </Box>
 

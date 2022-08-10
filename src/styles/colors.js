@@ -1,23 +1,25 @@
 export const lightColors = {
-    UNFOCUSED_TAB_BAR: "#dcdcdc",
-    FOCUSED_TAB_BAR: "#d1551f",
-    PRIMARY_COLOR: "",
+    UNFOCUSED_TAB_BAR: "#999999",
+    FOCUSED_TAB_BAR: "#ff7300",
+    PRIMARY_COLOR: "#ff7300",
     SECONDARY_COLOR: "",
     SALEOFF_COLOR: "#F7A34A",
     PRICE_TAG_COLOR: "#c52c29",
-    PRICE_ORIGIN_COLOR: '#dcdcdc',
+    PRICE_ORIGIN_COLOR: '#999999',
     LIGHT_BORDER: '#dcdcdc',
-    GRAY_INPUT: '#f5f5f5'
+    GRAY_INPUT: '#f5f5f5',
+    PINK_BG: 'rgba(254, 237, 236,0)'
 }
 
 export const darkColors = {
-    UNFOCUSED_TAB_BAR: "#dcdcdc",
+    UNFOCUSED_TAB_BAR: "#999999",
     FOCUSED_TAB_BAR: "#d1551f",
-    PRIMARY_COLOR: "",
+    PRIMARY_COLOR: "#ff7300",
     SECONDARY_COLOR: "",
     SALEOFF_COLOR: "#F7A34A",
     PRICE_TAG_COLOR: "#c52c29",
     PRICE_ORIGIN_COLOR: '#dcdcdc',
     LIGHT_BORDER: '#dcdcdc',
-    GRAY_INPUT: '#d6d6d6'
+    GRAY_INPUT: '#d6d6d6',
+    PINK_BG: '#feedec'
 }

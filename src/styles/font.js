@@ -19,5 +19,7 @@ export const fontSize = {
     subTitle: 18,
     subTitlePx: '18px',
     detailTitle: 14,
-    detailTitlePx: '14px'
+    detailTitlePx: '14px',
+    normal: 12,
+    normalPx: '12px'
 }
