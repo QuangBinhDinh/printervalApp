@@ -2,7 +2,7 @@
 import React, { useEffect, useState, memo, useRef } from "react";
 import { Box, Text, Input, Icon, Image, Button, Row, Center } from "native-base";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TouchableOpacity, ImageBackground, View, StyleSheet, Image as NativeImage, TextInput, ScrollView, Animated, } from "react-native";
+import { TouchableOpacity, ImageBackground, View, StyleSheet, Image as NativeImage, TextInput, ScrollView, Animated, Platform, } from "react-native";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
@@ -41,6 +41,7 @@ const HomeScreen = () => {
     const { headerToWhite, headerToNormal, headerColorNew } = useHeaderAnimation(colors.PINK_BG);
     const { inputToGray, inputToNormal, inputColorNew } = useInputAnimation(colors.GRAY_INPUT);
     const [searchVisiblie, setSearchVisible] = useState(false);
+    const [keyword, setKeyword] = useState("");
     const inputRef = useRef();
 
     const renderSearchButton = () => { // render button search header
@@ -60,10 +61,11 @@ const HomeScreen = () => {
                 setSearchVisible(false);
                 headerToNormal();// animation color
                 inputToNormal();
+                setKeyword("");//reset input
                 inputRef.current?.blur();
             }}
                 style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent' }}>
-                <Icon as={<Feather name={'arrow-left'} />} size={5} color={'#ff7300'} />
+                <Icon as={<Feather name={'arrow-left'} />} size={5} color={'black'} />
             </TouchableOpacity>
         )
     }
@@ -81,10 +83,12 @@ const HomeScreen = () => {
                     overflow={'hidden'}
                     alignItem={'center'}>
                     {renderSearchButton()}
-                    <Row flex={6}>
+                    <Row flex={6} alignItems={'center'}>
                         <TextInput style={{ width: '100%', }}
-                            placeholder={'Search for anything on Printerval'}
-                            placeholderTextColor={'gray'}
+                            //placeholder={'Search for anything on Printerval'}
+                            // placeholderTextColor={'gray'}
+                            onChangeText={text => setKeyword(text)}
+                            value={keyword}
                             fontSize={16}
                             fontFamily={fonts.mainFont}
                             fontWeight={'300'}
@@ -97,6 +101,20 @@ const HomeScreen = () => {
                                 inputToGray();
                             }}
                         />
+                        {// render custom placeholder, chỉ hiện khi keyword rỗng
+                            keyword == "" && <Row position={'absolute'} left={'5px'} alignItems={'center'} pointerEvents={'none'}>
+                                <Text
+                                    fontFamily={fonts.mainFont}
+                                    fontSize={16}
+                                    color={'grey'}>
+                                    {'Search for anything on '}
+                                </Text>
+                                <Image source={require('../../assets/image/TextLogo.png')}
+                                    w={'90px'} h={'18px'}
+                                    mt={Platform.OS == 'ios' ? '-2px' : 0} //different font render in IOS and Android
+                                />
+                            </Row>
+                        }
                     </Row>
                 </AnimatedRow>
             </Animated.View>

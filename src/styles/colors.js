@@ -8,7 +8,7 @@ export const lightColors = {
     PRICE_ORIGIN_COLOR: '#999999',
     LIGHT_BORDER: '#dcdcdc',
     GRAY_INPUT: '#f5f5f5',
-    PINK_BG: 'rgba(254, 237, 236,0)'
+    PINK_BG: '#feedec'
 }
 
 export const darkColors = {

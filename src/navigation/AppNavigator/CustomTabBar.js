@@ -47,6 +47,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
                     return (
                         <TouchableOpacity
+                            key={index}
                             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                             accessibilityRole="button"
                             accessibilityState={isFocused ? { selected: true } : {}}
